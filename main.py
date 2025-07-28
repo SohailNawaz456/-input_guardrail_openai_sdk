@@ -75,11 +75,19 @@ async def prime_minister_check(
         tripwire_triggered=guardrail_result.final_output.is_prime_minister,
     )
 
+second_agent = Agent(
+    name="second_agent",
+    instructions="if user is asking about the president ,so additionaly tell about prime minister and reply to user",  
+    input_guardrails=[prime_minister_check],
+    handoff_description="you tell user about presdient and prime minister"                                                                                        
+)
+
 # Main agent that handles general queries but has input guardrails
 agent = Agent(
     name="triage_agent",
     instructions="You are a helpful assistant.",
     input_guardrails=[prime_minister_check],
+    handoffs=[second_agent],
 )
 
 # Main function to run the agent and handle guardrail trips
@@ -87,7 +95,7 @@ agent = Agent(
 async def main():
     try:
         # Test input — change this to test different queries
-        result = await Runner.run(agent, "Hi, tell me who is the president of Pakistan", run_config=config)
+        result = await Runner.run(agent, "Hi, tell me who is the president of Pakistan, call second agent", run_config=config)
 
         # If successful, show checkmark and output
         rich.print("✅ Guardrail unexpected:", result.final_output)
