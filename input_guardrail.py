@@ -98,11 +98,11 @@ async def main():
         result = await Runner.run(agent, "Hi, tell me who is the president of Pakistan, call second agent", run_config=config)
 
         # If successful, show checkmark and output
-        rich.print("✅ Guardrail unexpected:", result.final_output)
+        rich.print("✅", result.final_output)
 
     # If guardrail is triggered
-    except InputGuardrailTripwireTriggered:
-        rich.print("❌ Guardrail triggered: Prime Minister-related query detected. Blocking input.")
+    except InputGuardrailTripwireTriggered as e:
+        rich.print("❌",e)
 
 # Run the main function if script is executed
 if __name__ == "__main__":
