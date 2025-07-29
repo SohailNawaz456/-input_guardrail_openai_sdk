@@ -1,82 +1,71 @@
-# 🛡️ Input Guardrail with OpenAI Agent SDK (Gemini API)
+# 🛡️ Input & Output Guardrail System using OpenAI-Compatible Gemini API
 
-This project demonstrates how to use input guardrails with the OpenAI Agent SDK powered by Google's **Gemini 2.0 Flash** model. It blocks specific inputs—like questions about the Prime Minister—using custom logic.
+This project demonstrates how to use **input** and **output guardrails** with a multi-agent system using the **OpenAI-compatible Gemini 2.0 Flash model**.
 
----
+## 📁 Files
 
-## 🚀 Features
+### 1. `input_guardrail.py`
+Implements an **input guardrail** to detect if the user is asking about the **Prime Minister**. If detected, the request is passed (handed off) to a `second_agent` that provides extra information.
 
-- ✅ Input guardrail to detect sensitive topics (e.g., Prime Minister)
-- 🧠 Uses OpenAI-compatible Gemini 2.0 Flash API
-- 🛡️ Automatically blocks input using `InputGuardrailTripwireTriggered`
-- 🔐 Environment variable-based API key handling
-- ✅ Clean success/failure terminal output with emoji indicators
+- ✅ Uses `@input_guardrail` decorator
+- 🔍 Detects "prime minister" queries
+- 🤖 Uses `AsyncOpenAI` Gemini-compatible client
+- 🔄 Hands off to `second_agent` if tripwire is triggered
 
----
+### 2. `output_guardrail.py`
+Implements an **output guardrail** to detect if the user query result mentions the **President**. If yes, it triggers a secondary response using a second agent that provides extra context.
 
-## 📁 Project Structure
-
-input_guardrail_openai_agent_sdk/
-├── main.py # Entry point with guardrail and agent logic
-├── .env # API key file (not committed)
-├── README.md # This file
-
+- ✅ Uses `@output_guardrail` decorator
+- 🔍 Detects "president" responses
+- 🤖 Uses `Runner.run_sync()` for synchronous execution
+- 🧠 Demonstrates how to use `GuardrailFunctionOutput`
 
 ---
 
-## 🔧 Setup Instructions
+## 🧪 Example Use Case
 
-1. **Clone the repository**:
+> "Who is the President of Pakistan in 2023?"
 
-```bash
-git clone https://github.com/your-username/input_guardrail_openai_agent_sdk.git
-cd input_guardrail_openai_agent_sdk
+- If the input or output contains references to the **President or Prime Minister**, a **tripwire is triggered**, and a second agent provides **additional information** automatically.
 
-Create and activate a virtual environment (optional but recommended):
-python -m venv venv
-venv\Scripts\activate   # On Windows
-source venv/bin/activate  # On Mac/Linux
+---
+
+## ⚙️ Requirements
+
+- Python 3.10+
+- `pydantic`
+- `python-dotenv`
+- `rich`
+- `openai`-compatible SDK with Gemini support
 
 Install dependencies:
+
+```bash
 pip install -r requirements.txt
 
-Create a .env file with your Gemini API key:
-GEMINI_API_KEY=your_gemini_api_key_here
 
-🔐 Note: Never commit your .env file.
+🔑 Environment Setup
+GEMINI_API_KEY=your_api_key_here
 
-▶️ Run the Program
-uv run main.py
+🚀 Running the Scripts
+For Input Guardrail:
 
-✅ Output Example
-If the input is allowed:
+python input_guardrail.py
+For Output Guardrail:
 
-✅ The current president of the pakistan is Asif Ali Zardari.
+python output_guardrail.py
+🧠 Concepts Used
+Agents with guardrails (input & output)
 
-If the input is blocked:
+Tripwire logic using GuardrailFunctionOutput
 
-❌ Guardrail triggered: Prime Minister-related query detected. Blocking input.
+Multi-agent handoff architecture
 
-🧠 How It Works
-A custom Pydantic model (Prime_Minister_Check) checks for sensitive input.
+OpenAI-compatible Gemini model integration
 
-The input guardrail function prime_minister_check flags when is_prime_minister is True.
+📬 Contact
+Created by Sohail Nawaz
+🔗 GitHub | 🌐 LinkedIn
 
-The main triage_agent runs only if no guardrail is tripped.
-
-📜 License
-MIT License — free to use, modify, and distribute.
-
-✨ Author
-Made with ❤️ by Sohail Nawaz
-
-
----
-
-Let me know if you want me to:
-- Auto-generate a `requirements.txt`
-- Add badges (e.g., Python version, license)
-- Translate it into Urdu
-
-Ready to publish this?
-
+📄 License
+This project is licensed under the MIT License.
